@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Падение футбольного мячика</title>
+  <meta http-equiv="Content-Type" content="text/html">
+  <meta charset="utf-8">
+	<style type="text/css">
+		#field{
+			border-bottom: 3px solid grey;
+			height: 200px;
+			position: relative;
+		}
+		
+		#ball{
+      height: 80px;
+      width: 80px;
+			cursor: pointer;
+			position: absolute;
+		}
+	</style>
+	
+</head>
+<body>
+	<div id='field'>
+		<img id='ball' src='/мячик.jpg' alt='ball'>
+	</div>
+	
+	<script>
+	
+		
+		function animate(options){
+			let start = performance.now();
+			
+			requestAnimationFrame(function animation(time){
+				let timeFraction = (time - start) / options.duration;
+				if(timeFraction > 1) timeFraction = 1;
+				
+				let progress = options.timing(timeFraction);
+				options.draw(progress);
+				
+				if(progress < 1) requestAnimationFrame(animation);
+			});
+		};
+		
+		function bounce(timeFraction){
+			for (let a = 0, b = 1, result; 1; a += b, b /= 2) {
+				if (timeFraction >= (7 - 4 * a) / 11) {
+				  return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2)
+				};
+			};
+		};
+		
+		function makeEaseOut(timing){
+			return function(timeFraction){
+				return 1 - timing(1 - timeFraction);
+			};
+		};
+		
+		ball.onclick = function(){
+			let to = field.clientHeight - ball.offsetHeight;
+			let x = 0;
+			
+			animate({
+				duration: 2000,
+				timing: makeEaseOut(bounce),
+				draw: function(progress){
+					ball.style.top = to * progress + 'px';
+				}
+			});
+		};
+		
+	</script>
+</body>
+</html>
