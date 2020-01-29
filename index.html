@@ -65,6 +65,8 @@
 				timing: makeEaseOut(bounce),
 				draw: function(progress){
 					ball.style.top = to * progress + 'px';
+					x++;
+          				ball.style.left = x + 'px';
 				}
 			});
 		};
